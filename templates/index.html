@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minion DW Schedule</title>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/common.css') }}">
+    <link id="pagestyle" rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/styles.css') }}">
+    <link id="modalstyle" rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/modalstyle.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/lib/jquery-ui.css') }}">
+
+</head>
+
+<body class="body">
+    <div id='header' class="header">
+    <img style="vertical-align:middle" height="50px" src="{{ url_for('static',filename='assets/gru.png') }}"/>
+    <span class="gru">YOUR APP NAME</span>
+    <span id="clock" class="clock"></span>
+    </div>
+    <hr>
+    <div id="wrapper" class="wrapper" style="display:none">
+        <div class="Running">Running </div>
+        <div class="Failed">Failed </div>
+        <div class="Completed">Completed</div>
+        <div class="Tdr">TriggerDagRunOperator</div>
+        <div class="Ets">ExternalTaskSensor</div>
+        <div class="time">Time</div>
+        <div class="inactive">Inactive</div>
+        <div class="sla">SLA</div>
+    </div>
+    <div class="wrapper">
+
+        <input type="text" id="searchbox" class="Search"  placeholder="Search for..." onenter="null">
+
+        <button  onclick="GoAction()" class="BBtn">GO</button>
+        <button  onclick="location.reload(true);" class="BBtn">Reload</button>
+        <button  onclick="reset()" class="BBtn">Reset</button>
+        <button  onclick="showLegend()" class="BBtn">Legend</button>
+
+        <label class="Layout">Dark Mode:</label>
+        <label class="switch">
+        <input id='mode' type="checkbox">
+        <span class="slider round"></span>
+        </label>
+
+        <a href=nonlinked><button  class="nls">Non Linked Schedules</button></a>
+
+    </div>
+    <div id="dagstatusmodal" class="modal" >
+        <p id="modaltext" class="modaltext">DAG Runtime history</p>
+        <table id="historytable" class="historytable">
+            <tr>
+                <th id="executiondateheader" class="headermodal">execution date</th>
+                <th id="starttimeheader" class="headermodal">Start date</th>
+                <th id="endtimeheader" class="headermodal">End date</th>
+                <th id="runtimeheader" class="headermodal">Elapsed time</th>
+                <th id="statusheader" class="headermodal">Status</th>
+            </tr>
+            <tr id="row1" style="cursor: pointer;" onclick="GoToExecutionDate(this)">
+                <td id="executiondate1" class="column"></td>
+                <td id="starttime1" class="column"></td>
+                <td id="endtime1" class="column"></td>
+                <td id="runtime1" class="column"></td>
+                <td id="status1" class="column"></td>
+
+            </tr>
+            <tr id="row2" style="cursor: pointer;" onclick="GoToExecutionDate(this)">
+
+                <td id="executiondate2" class="column"></td>
+                <td id="starttime2" class="column"></td>
+                <td id="endtime2" class="column"></td>
+                <td id="runtime2" class="column"></td>
+                <td id="status2" class="column"></td>
+
+            </tr>
+            <tr id="row3" style="cursor: pointer;" onclick="GoToExecutionDate(this)">
+
+                <td id="executiondate3" class="column"></td>
+                <td id="starttime3" class="column"></td>
+                <td id="endtime3" class="column"></td>
+                <td id="runtime3" class="column"></td>
+                <td id="status3" class="column"></td>
+
+            </tr>
+            <tr id="row4" style="cursor: pointer;" onclick="GoToExecutionDate(this)">
+
+                <td id="executiondate4" class="column"></td>
+                <td id="starttime4" class="column"></td>
+                <td id="endtime4" class="column"></td>
+                <td id="runtime4" class="column"></td>
+                <td id="status4" class="column"></td>
+            </tr>
+            <tr id="row5" style="cursor: pointer;" onclick="GoToExecutionDate(this)">
+                <td id="executiondate5" class="column"></td>
+                <td id="starttime5" class="column"></td>
+                <td id="endtime5" class="column"></td>
+                <td id="runtime5" class="column"></td>
+                <td id="status5" class="column"></td>
+            </tr>
+        </table>
+        <button  class="BBtn" onclick="GoToDag()">View DAG</button>
+    </div>
+
+    <figure id="svg_container" class="svg_container">
+    <svg id="svg-id" class="svg" >
+            <g id="root" style="cursor: pointer;" ></g>
+    </svg>
+    </figure>
+    <div class="form-popup" id="selectionForm">
+    <form class="form-container">
+    <a id="openmodal" href="#dagstatusmodal" rel="modal:close"><button type="submit" class="square_btn" onclick="setTableData()">History</button></a>
+    <button type="button" class="square_btn" onclick="highlightEdge(ClickedNode)">Dependencies</button>
+    <button type="button" class="close_btn" onclick="closeForm()">X</button>
+    </form>
+    </div>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/lib/dagre-d3.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/lib/dagre.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/lib/d3.v3.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/lib/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/lib/jquery.modal.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/lib/jquery-ui.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/common.js') }}"></script>
+
+
+</body>
+<script>
+    var states_history={{ dag_status_history|safe }};
+    var env="{{ env }}";
+</script>
+
+<script>
+        var ClickedNode=''
+        var defaultLayoutVal='LR'
+        var nodes=[]
+        var svg = d3.select('svg')
+        var container=d3.select("g");
+        var bbox, viewBox, vx, vy, vw, vh, defaultView;
+
+        var theme = localStorage.getItem('theme');
+
+        var g = new dagre.graphlib.Graph();
+        var dummy_nodes=[];
+        var sla_nodes=[];
+        var sla_deadline_dict={}
+        var dag_properties_dict={}
+        function graph(layout){
+
+            // Set an object for the graph label
+            g.setGraph({nodesep: 20,
+            edgesep: 5,
+            ranksep: 50,
+            rankdir: layout,
+            marginx: 0,
+            marginy: 0,
+            ranker:"longest-path"
+            })
+            .setDefaultEdgeLabel(function() { return { curve: d3.curveBasis } });
+
+            {% for node in all_nodes %}
+                var html='';
+                var dag_name="{{ node[0] }}"
+                var sla_tag="{{ node[1] }}"
+                var schedule="{{ node[2] }}"
+                var sla="{{ node[3] }}"
+                var currently_active="{{ node[4] }}"
+                dag_properties_dict[dag_name]=[schedule, currently_active]
+            if (sla != "None"){
+                    sla_deadline_dict[dag_name]=sla
+                }
+                if (sla_tag=='Y'){sla_nodes.push(dag_name);}
+                if (dag_name.length > 50){
+                    html = '<div class="panel2">'+dag_name+'</div>'}
+                else if (dag_name.length > 32) {
+                    html = '<div class="panel1">'+dag_name.split('-')[0] + '-<br>' + dag_name.split('-')[1]+'</div>'}
+                else{
+                    html = '<div class="panel">'+dag_name+'</div>'}
+
+                g.setNode(dag_name,    {labelType: "html",label: html,
+                                 width: 500, height: 60,padding: 0});
+            {% endfor %}
+
+            var i=0;
+            {% for node in all_nodes_with_successor %}
+                var dag_name="{{ node[0] }}"
+                var successor_dag_name="{{ node[1] }}"
+                var operator ="{{ node[2] }}"
+                
+                if (operator=='D'){
+                    dummy_nodes.push(dag_name);
+                    dep='T'+i}
+                else{dep=operator+i;}
+
+                g.setNode(dep,    {label:' ',shape : "circle"});
+                g.setEdge(dag_name,dep, {arrowhead: "undirected" ,id:dag_name+successor_dag_name });
+                g.setEdge(dep,successor_dag_name, {arrowhead: "vee",arrowheadStyle: "fill: #12BDF9", id:dag_name+successor_dag_name });
+                
+                i=i+1
+            {% endfor %}
+
+            g.nodes().forEach(function(v) {
+                var node = g.node(v);
+                 // Round the corners of the nodes
+                node.rx = node.ry = 5;
+             });
+
+            var layout = dagre.layout(g);
+
+            // Create and configure the renderer
+            var render = dagreD3.render();
+            innerSvg = d3.select("svg g");
+            innerSvg.call(render, g);
+
+            theme = localStorage.getItem('theme') ?? 'light';
+            colorNodes(theme);
+
+            bbox = container.node().getBBox();
+            vx = bbox.x;        // container x co-ordinate
+            vy = bbox.y;        // container y co-ordinate
+            vw = bbox.width;    // container width
+            vh = bbox.height;   // container height
+            defaultView = "" + vx + " " + vy + " " + vw + " " + vh;
+            svg
+                .attr("viewBox", defaultView)
+                .attr("preserveAspectRatio", "xMidYMid meet")
+                .call(zoom);
+
+        }
+    
+    function colorNodes(theme){
+
+            var status_color_mapping={"running":'#13E77D',"failed":'#F86458',"success":'#7FA2FE'}
+
+            var state={{ status|safe }}
+            svg.selectAll("g.node").style("fill",function(id){
+
+                if (dummy_nodes.includes(id)){ return "yellow";}
+                else if (dag_properties_dict.hasOwnProperty(id) && dag_properties_dict[id][1].toLowerCase() == 'true'){ return "#E5E7E9";}
+                else if (!(state.hasOwnProperty(id)) && !(id.includes('T')) && !(id.includes('E')) && !(id.includes('D'))){
+                    return status_color_mapping['success'];}
+                else if (id.includes('T')){
+                        return "#7FFFD4";
+                    }
+                else if (id.includes('E')) { return "#ffa500";}
+                else { return status_color_mapping[state[id]];}
+            }).style("stroke-width", function(id){if (sla_nodes.includes(id)){ return "15px"} else
+                                                    {return "1.2px"}})
+               .style("stroke",function(id){if (sla_nodes.includes(id)){ return "#F1C40F" }else
+                                                    {return "black"}});
+                svg.selectAll("g.edgePath").style("stroke", edgecolor[theme]).style("stroke-width", "2.8px");
+        }
+    
+    function openForm(left,top) {
+       //document.getElementById("dagname").innerHTML = ClickedNode;
+       document.getElementById("selectionForm").style.left = left+"px";
+           document.getElementById("selectionForm").style.top = top+"px";
+           document.getElementById("selectionForm").style.display = "block";
+       }
+
+       function closeForm() {
+           document.getElementById("selectionForm").style.display = "none";
+       }
+        function GoAction(){
+            var layout=document.getElementById("Layout");
+            if (defaultLayoutVal!=layout.value){
+                defaultLayoutVal=layout.value;
+                graph(layout.value);
+                reset();
+            }
+            search();
+        }
+
+        graph(defaultLayoutVal);
+
+        // click event
+    svg.selectAll("g.node").on("click", function(id) {
+
+                if (id!="start" && !(id.includes('T')) && !(id.includes('E')) && !dummy_nodes.includes(id) ){
+                    ClickedNode=id;
+                    openForm((d3.event.pageX-40),(d3.event.pageY - 100));
+                }
+                 });
+
+    function highlightEdge(inputNode){
+            theme=localStorage.getItem('theme','light')?? 'light';
+
+            successor=g.successors(inputNode);
+            predecessor=g.predecessors(inputNode);
+
+            svg.selectAll("g.edgePath").style("stroke", function(id){
+                if (successor.includes(id['v']) || successor.includes(id['w']) || predecessor.includes(id['v']) || predecessor.includes(id['w'])) {
+                    if  (d3.select(this).style("stroke")=='rgb(18, 189, 249)'|| d3.select(this).style("stroke")=='rgb(0, 0, 0)' || d3.select(this).style("stroke") == 'rgb(255, 0, 0)') {
+                        return "red";}
+                    else { return edgecolor[theme]; }
+                 }
+                else {
+                    return d3.select(this).style("stroke");}
+            });
+
+        }
+        //hover event
+    var div = d3.select("body").append("div")
+                    .attr("class", "tooltip")
+                    .style("opacity", 0);
+
+        svg.selectAll("g.node").on("mouseover", function(id) {
+            div = d3.select("body").append("div")
+                    .attr("class", "tooltip")
+                    .style("opacity", 0);
+                    div.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+            if (id.includes("T") || id.includes("E")) {
+                     if (id.includes("T")){
+                            div.html(g.predecessors(id) +"<br> triggers <br>"+ g.successors(id) + "<br/>")
+                               .style("left", (d3.event.pageX-40) + "px")
+                               .style("top", (d3.event.pageY - 80) + "px");
+                     }
+                     else if (id.includes("E")){
+                            div.html(g.successors(id) +"<br> waits for  <br>"+ g.predecessors(id) + "<br/>")
+                               .style("left", (d3.event.pageX) + "px")
+                               .style("top", (d3.event.pageY - 28) + "px");
+                     }
+                }
+                else if (!dummy_nodes.includes(id)) {
+                    document.getElementById("root").style.cursor='pointer';
+                    if (id in sla_deadline_dict)  {
+                        text="DAG Name:   "+ id + "<br/> Schedule:  "+dag_properties_dict[id][0]+"<br/> SLA:  </br>"+sla_deadline_dict[id].replace(',','<br>')+"<br/>";
+                    }else{
+                        text="DAG Name:   "+ id + "<br/> Schedule:  "+dag_properties_dict[id][0];
+                    }
+
+                    div.html(text)
+                               .style("left", (d3.event.pageX) + "px")
+                               .style("top", (d3.event.pageY - 20) + "px");
+
+                }
+        }).on("mouseout", function(id) {
+            div.transition()
+                .duration(300)
+                .remove();
+        });
+        // search box function
+        function search() {
+            searchVal=document.getElementById("searchbox").value.toLowerCase();
+            xScale=5.0;
+            var foundFlag=0;
+            g.nodes().forEach(function(v) {
+
+                if (v == searchVal){
+                    foundFlag=1;
+                    nodeX=g.node(v)['x'];
+                    nodeY=g.node(v)['y'];
+                    nodeW=g.node(v)['width'];
+                    nodeH=g.node(v)['height'];
+                    var tx = -nodeX*xScale + vx + vw/2 - nodeW*xScale/2;
+                    var ty = -nodeY*xScale + vy + vh/2 - nodeH*xScale/2;
+
+                    container.transition().duration(1000)
+                                      .attr("transform", "translate(" + [tx, ty] + ")scale(" + xScale + ")");
+
+                    svg.selectAll("g.edgePath").style("opacity", 0.1);
+                    svg.selectAll("g.node").style("opacity", function(id){
+                        if (id==v){
+                            return 0.9;}
+                        else
+                        {
+                            return 0.1;
+                        }
+                    });
+                    zoom.scale(xScale)
+                        .translate([tx, ty]);
+                scale = xScale;
+
+                }
+
+            });
+            document.getElementById("searchbox").value='';
+            if ((foundFlag == 0)&&(searchVal!='')){
+                alert("OOPS! " +searchVal+" not found ");
+            }
+        }
+
+        d3.select("svg").on("click",function(id){
+            svg.selectAll("g").style("opacity", 1);
+        });
+
+        {% for node in all_nodes %}
+            dags="{{ node[0] }}"
+            nodes.push(dags)
+        {% endfor %}
+
+
+    </script>
+</html>

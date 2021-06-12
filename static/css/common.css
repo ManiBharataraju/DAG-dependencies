@@ -1,0 +1,333 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.wrapper
+{
+    font-size: 15px;
+    color:black;
+    padding:3px;
+}
+.Running
+{
+    margin:0px 3px 0px 0px;
+    padding:5px;
+    border:1px solid rgb(0, 0, 0);
+    background-color:#13E77D;
+    border-radius: 4px;
+    width: 100px;
+    text-align:center;
+    font-family:Arial, Helvetica, sans-serif;
+    display:inline-block
+}
+
+.Failed
+{
+    margin:0px 3px 0px 0px;
+    padding:5px;
+    border:1px solid  rgb(0, 0, 0);
+    background-color:#F86458 ;
+    border-radius: 4px;
+    width: 100px;
+    text-align:center;
+    font-family:Arial, Helvetica, sans-serif;
+    display:inline-block
+}
+
+.Completed
+{
+margin:0px 3px 0px 0px;
+    padding:5px;
+    border-color:black;
+    background-color: #7FA2FE;
+    border:1px solid rgb(0, 0, 0);
+    border-radius: 4px;
+    width: 100px;
+    text-align:center;
+    font-family:Arial, Helvetica, sans-serif;
+    display:inline-block
+}
+
+.Tdr
+{
+margin:0px 3px 0px 0px;
+    padding:5px;
+    border-color:black;
+    background-color: #7FFFD4;
+    border:1px solid rgb(0, 0, 0);
+    border-radius: 4px;
+    width: 200px;
+    text-align:center;
+    font-family:Arial, Helvetica, sans-serif;
+    display:inline-block
+}
+
+.Ets
+{
+margin:0px 3px 0px 0px;
+    padding:5px;
+    border-color:black;
+    background-color: #ffa500;
+    border:1px solid rgb(0, 0, 0);
+    border-radius: 4px;
+    width: 150px;
+    text-align:center;
+    font-family:Arial, Helvetica, sans-serif;
+    display:inline-block
+}
+
+.Search
+{
+    margin:0px 3px 0px 0px;
+    width: 300px;
+    height:25px;
+    border-color:black;
+    border:1px solid rgb(0, 0, 0);
+    border-radius: 4px;
+    display:inline-block;
+    padding-left:10px;
+}
+
+
+
+.Layout_options
+{
+    font-family:Arial, Helvetica, sans-serif;
+    text-align:center;
+    display:inline-block;
+}
+
+.BBtn
+{
+    margin:5px;
+    width:70px;
+    height:40px;
+    font-family:Arial, Helvetica, sans-serif;
+    text-align:center;
+    cursor:pointer;
+    padding:3px;
+    display:inline-block;
+    background-color:#4eb5f1;
+    border-color:white;
+    border-radius:5px;
+}
+
+.nls{
+    margin:5px;
+    width:200px;
+    height:40px;
+    font-family:Arial, Helvetica, sans-serif;
+    text-align:center;
+    cursor:pointer;
+    padding:3px;
+    display:inline-block;
+    background-color:#4eb5f1;
+    border-color:white;
+    border-radius:5px;
+    float:right;
+}
+
+.svg_container
+{
+    padding-left:3px;
+
+}
+
+.column
+{
+    padding:5px;
+}
+
+.headermodal
+{
+    font-weight:bold;
+    font-family:Arial, Helvetica, sans-serif;
+    background-color: #4CAF50;
+    border-collapse: collapse;i
+    color:black;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 18px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 12px;
+  width: 12px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(20px);
+  -ms-transform: translateX(20px);
+  transform: translateX(20px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.inactive
+{
+margin:0px 3px 0px 0px;
+    padding:5px;
+    border-color:black;
+    background-color: #E5E7E9;
+    border:1px solid rgb(0, 0, 0);
+    border-radius: 4px;
+    width: 150px;
+    text-align:center;
+    font-family:Arial, Helvetica, sans-serif;
+    display:inline-block
+}
+
+.time
+{
+margin:0px 3px 0px 0px;
+    padding:5px;
+    border-color:black;
+    background-color: yellow;
+    border:1px solid rgb(0, 0, 0);
+    border-radius: 4px;
+    width: 150px;
+    text-align:center;
+    font-family:Arial, Helvetica, sans-serif;
+    display:inline-block
+}
+
+.form-popup {
+  display: none;
+  position: fixed;
+}
+
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color:#B4B3B8;
+  border: 2px solid white;
+  border-radius:4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  box-shadow: 0px 0px 8px -1px black;
+  -moz-box-shadow: 0px 0px 8px -1px black;
+  -webkit-box-shadow: 0px 0px 8px -1px black;
+  font-family:Arial, Helvetica, sans-serif;
+  font: 6px;
+}
+
+.square_btn{
+    display: inline-block;
+    padding: 7px 20px;
+  border-radius: 25px;
+    text-decoration: none;
+    color: black;
+    background-image: -webkit-linear-gradient(45deg, #FFC107 0%, #ff8b5f 100%);
+    background-image: linear-gradient(45deg, #FFC107 0%, #ff8b5f 100%);
+    transition: .4s;
+    font-family:Arial, Helvetica, sans-serif;
+    cursor:pointer;
+
+}
+
+.square_btn:hover {
+    background-image: -webkit-linear-gradient(45deg, #FFC107 0%, #f76a35 100%);
+    background-image: linear-gradient(45deg, #FFC107 0%, #f76a35 100%);
+}
+
+.close_btn{
+  display: inline-block;
+  text-decoration: none;
+  background-image: -webkit-linear-gradient(45deg, #E52C59 0%, #F16B8B 100%);
+  background-image: linear-gradient(45deg, #E52C59 0%, #F16B8B 100%);
+  color: #FFF;
+  width: 25px;
+  height: 25px;
+  line-height: 10px;
+  border-radius: 50%;
+  text-align: center;
+  vertical-align: middle;
+  overflow: hidden;
+  transition: .4s;
+  cursor:pointer;
+  color: black;
+}
+
+.close_btn:hover {
+    background-image: -webkit-linear-gradient(45deg, #E52C59 0%, #F16B8B 100%);
+    background-image: linear-gradient(45deg, #E52C59 0%, #F16B8B 100%);
+}
+
+.panel {
+margin: 0;
+cursor: pointer;
+align:center;
+width:450;
+font-size: 25px;
+font-family:Verdana, Geneva, sans-serif;
+display:inline-block;
+}
+
+.panel1 {
+margin: 0;
+cursor: pointer;
+align:center;
+width:450;
+font-size: 20px;
+font-family:Verdana, Geneva, sans-serif;
+padding:0px;
+display:inline-block;
+}
+
+.panel2 {
+margin: 0;
+cursor: pointer;
+align:center;
+width:450;
+font-size: 13.7px;
+font-family:Verdana, Geneva, sans-serif;
+padding:0px;
+display:inline-block;
+}
