@@ -1,6 +1,6 @@
 # DAG-dependencies
 
-DAG-dependencies was created to understand the dependencies between the dags in Airflow. 
+DAG-dependencies is a project created to understand the dependencies between the dags in Airflow. 
 
 It follows the below design
 
