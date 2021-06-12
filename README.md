@@ -46,5 +46,31 @@ CREATE TABLE
         recency_flag   CHARACTER(1), 
         run_time       CHARACTER VARYING(35) 
     );
-    
-    ![image](https://user-images.githubusercontent.com/9946408/121780244-20886800-cbbd-11eb-87bc-0b8704d4f536.png)
+
+
+Separate UI for linked and non linked dags
+<img> ![image](https://user-images.githubusercontent.com/9946408/121780811-9b528280-cbbf-11eb-9b0b-cbfe3da8499d.png) </img>
+hide/show legend switch between darkmode and light mode
+<img> ![image](https://user-images.githubusercontent.com/9946408/121780840-c5a44000-cbbf-11eb-9632-91a533e06b26.png) </img>
+
+form to check history/dependency
+<img> ![image](https://user-images.githubusercontent.com/9946408/121780863-db196a00-cbbf-11eb-9ac2-599145766f9c.png) </img>
+
+Click on history to see the data about dag runs
+<img> ![image](https://user-images.githubusercontent.com/9946408/121780872-e8365900-cbbf-11eb-8fde-037aed2c6f3d.png) </img>
+
+Click on dependencies to see the edges highlighted
+<img> ![image](https://user-images.githubusercontent.com/9946408/121780899-09974500-cbc0-11eb-9e1d-fb9af370e561.png) </img>
+
+tooltip to understand dependencies
+
+<img> ![image](https://user-images.githubusercontent.com/9946408/121781013-84606000-cbc0-11eb-9e10-ecd936e31e86.png)</img>
+<img> ![image](https://user-images.githubusercontent.com/9946408/121781040-a9ed6980-cbc0-11eb-9a5f-356136b9d47e.png) </img>
+ 
+
+
+
+ 
+
+
+
