@@ -14,7 +14,7 @@ from airflow.operators.dagrun_operator import TriggerDagRunOperator
 from airflow.sensors.external_task_sensor import ExternalTaskSensor
 from airflow.utils.db import provide_session
 
-from airflow.providers.postgres.hooks.postgres import DWPostgresHook
+from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.operators.python import PythonOperator
 
 
@@ -92,7 +92,7 @@ def get_dag_info(session = None, **kwargs):
              TRUNCATE table {schema}.dag_properties; INSERT INTO {schema}.dag_properties {dag_properties_rows}; 
              COMMIT;"""
 
-    conn = DWPostgresHook(postgres_conn_id='<your db conn id>')
+    conn = PostgresHook(postgres_conn_id='<your db conn id>')
     results = conn.run(sql)
 
 args = {
