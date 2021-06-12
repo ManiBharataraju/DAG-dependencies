@@ -1,0 +1,113 @@
+.body
+{
+background:#3B3E46;
+}
+.header
+{
+    background: #6F00FE;
+    color:white;
+    width:100%;
+    text-align:left;
+    display:block;
+    height:40px;
+    font-family:Comic Sans MS, cursive, sans-serif;
+    float:left;
+
+
+}
+
+.tooltip {
+    display: inline-block;
+    background-color: white;
+    border: 2px solid white;
+    height: auto;
+    margin-left: 32px;
+    position:absolute;
+    text-align:center;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    box-shadow: 0px 0px 8px -1px black;
+    -moz-box-shadow: 0px 0px 8px -1px black;
+    -webkit-box-shadow: 0px 0px 8px -1px black;
+    font-family:Arial, Helvetica, sans-serif;
+    font: 6px;
+}
+
+.svg
+{
+    background-color:rgb(10,10,10);
+    cursor: all-scroll;
+    padding:5px;
+    width:99%;
+    align:center;
+    border-radius: 4px;
+    border:1px solid rgb(0, 0, 0);
+    height:750px;
+    background:#3B3E46;
+
+}
+
+.gru{
+font-size:20px;
+color:white;
+align:left;
+}
+
+.modaltext
+{
+    align:center;
+    padding-bottom:10px;
+    font-weight:bold;
+    font-family:Arial, Helvetica, sans-serif;
+    color:white;
+
+}
+
+.clock
+{
+    float:right;
+    color:white;
+    padding-top:6px;
+    padding-right:6px;
+}
+
+.panel {
+margin: 0;
+cursor: pointer;
+}
+
+.sla
+{
+    margin:0px 3px 0px 0px;
+    padding:5px;
+    border-color:#F1C40F;
+    border:3px solid #F1C40F;
+    border-radius: 4px;
+    width: 50px;
+    text-align:center;
+    font-family:Arial, Helvetica, sans-serif;
+    color:white;
+    display:inline-block
+}
+
+.Layout
+{
+    margin:0px 3px 0px 0px;
+    padding:3px;
+    font-family:Arial, Helvetica, sans-serif;
+    color:white;
+    display:inline-block;
+}
+
+.historytable{
+    border:"1";
+    cellpadding:"5";
+    cellspacing:"2";
+    border-collapse: collapse;
+    font-family:Arial, Helvetica, sans-serif;
+    color:white;
+}
+
+
+#historytable tr:hover {background-color: black;}

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minion DW Schedule</title>
+   <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/common.css') }}">
+    <link id="pagestyle" rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/styles.css') }}">
+    <link id="modalstyle" rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/modalstyle.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/lib/jquery-ui.css') }}">
+
+</head>
+
+
+<body class="body">
+    <div id='header' class="header">
+        <img style="vertical-align:middle" height="50px" src="{{ url_for('static',filename='asstes/gru.png') }}"/>
+        <span class="gru">YOUR APP NAME</span>
+        <span id="clock" class="clock"></span>
+    </div>
+    <hr>
+    <div id="wrapper" class="wrapper" style="display:none">
+        <div class="Running">Running </div>
+        <div class="Failed">Failed </div>
+        <div class="Completed">Completed</div>
+        <div class="inactive">Inactive</div>
+    </div>
+    <div class="wrapper">
+        <input type="text" id="searchbox" class="Search"  placeholder="Search for..." onenter="null">
+
+        <button  onclick="GoAction()" class="BBtn">GO</button>
+        <button  onclick="location.reload(true);" class="BBtn">Reload</button>
+        <button  onclick="reset()" class="BBtn">Reset</button>
+        <button  onclick="showLegend()" class="BBtn">Legend</button>
+
+        <label class="Layout">Dark Mode:</label>
+        <label class="switch">
+        <input id='mode' type="checkbox">
+        <span class="slider round"></span>
+        </label>
+        <a href="/"><button  class="nls">Linked Schedules</button></a>
+    </div>
+
+    <div id="dagstatusmodal" class="modal" >
+        <p id="modaltext" class="modaltext">DAG Runtime history</p>
+        <table id="historytable" class="historytable">
+            <tr>
+                <th id="executiondateheader" class="headermodal">execution date</th>
+                <th id="starttimeheader" class="headermodal">Start date</th>
+                <th id="endtimeheader" class="headermodal">End date</th>
+                <th id="runtimeheader" class="headermodal">Elapsed time</th>
+                <th id="statusheader" class="headermodal">Status</th>
+            </tr>
+            <tr id="row1" style="cursor: pointer;" onclick="GoToExecutionDate(this)">
+                <td id="executiondate1" class="column"></td>
+                <td id="starttime1" class="column"></td>
+                <td id="endtime1" class="column"></td>
+                <td id="runtime1" class="column"></td>
+                <td id="status1" class="column"></td>
+
+            </tr>
+            <tr id="row2" style="cursor: pointer;" onclick="GoToExecutionDate(this)">
+
+                <td id="executiondate2" class="column"></td>
+                <td id="starttime2" class="column"></td>
+                <td id="endtime2" class="column"></td>
+                <td id="runtime2" class="column"></td>
+                <td id="status2" class="column"></td>
+
+            </tr>
+            <tr id="row3" style="cursor: pointer;" onclick="GoToExecutionDate(this)">
+
+                <td id="executiondate3" class="column"></td>
+                <td id="starttime3" class="column"></td>
+                <td id="endtime3" class="column"></td>
+                <td id="runtime3" class="column"></td>
+                <td id="status3" class="column"></td>
+
+            </tr>
+            <tr id="row4" style="cursor: pointer;" onclick="GoToExecutionDate(this)">
+
+                <td id="executiondate4" class="column"></td>
+                <td id="starttime4" class="column"></td>
+                <td id="endtime4" class="column"></td>
+                <td id="runtime4" class="column"></td>
+                <td id="status4" class="column"></td>
+            </tr>
+            <tr id="row5" style="cursor: pointer;" onclick="GoToExecutionDate(this)">
+                <td id="executiondate5" class="column"></td>
+                <td id="starttime5" class="column"></td>
+                <td id="endtime5" class="column"></td>
+                <td id="runtime5" class="column"></td>
+                <td id="status5" class="column"></td>
+            </tr>
+        </table>
+        <button  class="BBtn" onclick="GoToDag()">View DAG</button>
+    </div>
+
+    <figure id="svg_container" class="svg_container">
+    <svg id="svg-id" class="svg" >
+        <a id="anchortag" href="#dagstatusmodal" rel="modal:open">
+            <g id="root" style="cursor: pointer;" ></g>
+        </a>
+    </svg>
+    </figure>
+
+
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/lib/d3.v3.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/lib/jquery.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/lib/jquery.modal.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/lib/jquery-ui.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename = 'js/common.js') }}"></script>
+</body>
+<script>
+    var states_history={{ dag_status_history|safe }};
+    var nodes={{ all_nodes|safe }};
+    var env="{{ env }}";
+</script>
+<script>
+        var ClickedNode=''
+        var defaultLayoutVal='LR'
+        var svg = d3.select('svg').style("stroke", "black").style("font-size", "12px")
+                                  .style( "fill",'#5555ff' )
+                                  .attr("font-family",'Verdana, Geneva, sans-serif')
+                                  .attr("font-weight", 100);
+        var container=d3.select("g");
+        
+        var bbox, viewBox, vx, vy, vw, vh, defaultView;
+        var status_color_mapping={"running":'#13E77D',"failed":'#F86458',"success":'#7FA2FE'}
+        var state={{ status|safe }}
+        var currently_active={{ dag_active_status|safe }}
+        function graph(){
+            var x=0;
+            var y=10
+            nodes.forEach(function(v) {
+                container.append("rect")
+                    .attr("x", x)
+                    .attr("y", y)
+                    .attr("width", 450)
+                    .attr("height", 50)
+                    .style("fill",function(){
+                        if (currently_active[v]=='true'){return "#E5E7E9";}
+                        else if (!(state.hasOwnProperty(v))){
+                        return status_color_mapping['success'];}
+                        else { return status_color_mapping[state[v]];}
+                     })
+                    .attr("rx",5)
+                    .attr("ry",5)
+                    .attr("id",v);
+
+                container.append("text")
+                .attr("fill","#fff")
+                .attr("x", x+225)
+                .attr("y", y+28)
+                .attr("text-anchor", "middle")
+                .style("stroke-width", 1.2)
+                .style({"font-size":"12px"})
+                .style("font-family",'Verdana, Geneva, sans-serif')
+                .text(function() { return v;})
+                .attr("id",v);
+
+                if (x+600 > 1800){
+                    x=0;
+                    y+=70;}
+                else{
+                    x=x+470;}
+               });
+
+            bbox = container.node().getBBox();
+            vx = bbox.x;        // container x co-ordinate
+            vy = bbox.y;        // container y co-ordinate
+            vw = bbox.width;    // container width
+            vh = bbox.height;   // container height
+            svg
+                .call(zoom);
+
+        }
+
+        function GoAction(){
+            search();
+        }
+
+        graph();
+
+        // click event
+        svg.selectAll("rect").on("click", function() {
+                ClickedNode=this.id
+                setTableData();
+                 });
+
+        svg.selectAll("text").on("click", function() {
+                ClickedNode=this.id
+                setTableData();
+                 });
+
+
+        // search box function
+        function search() {
+            searchVal=document.getElementById("searchbox").value.toLowerCase();
+            xScale=2.0;
+            var foundFlag=0;
+
+            d3.selectAll("rect").each(function() {
+                if (this.id == searchVal){
+                    foundFlag=1;
+                    nodeX=d3.select(this).attr('x');
+                    nodeY=d3.select(this).attr('y');
+                    nodeW=d3.select(this).attr('width');
+                    nodeH=d3.select(this).attr('height');
+                    var tx = -nodeX*xScale + vx+500 + vw/4 - nodeW*xScale/2;
+                    var ty = -nodeY*xScale + vy-100 + vh/4 - nodeH*xScale/2;
+
+                    container.transition().duration(1000)
+                                      .attr("transform", "translate(" + [tx, ty] + ")scale(" + xScale + ")");
+
+
+                    svg.selectAll("rect").style("opacity", function(){
+                        if (this.id==searchVal){
+                            return 0.9;}
+                        else
+                        {
+                            return 0.1;
+                        }
+                    });
+                    zoom.scale(xScale)
+                        .translate([tx, ty]);
+                scale = xScale;
+
+                }
+
+            });
+            document.getElementById("searchbox").value='';
+            if ((foundFlag == 0)&&(searchVal!='')){
+                alert("OOPS! " +searchVal+" not found ");
+            }
+        }
+
+        d3.select("svg").on("click",function(id){
+            svg.selectAll("rect").style("opacity", 1);
+        });
+
+    </script>
+</html>
