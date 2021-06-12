@@ -53,7 +53,7 @@ Separate UI for linked and non linked dags
 hide/show legend switch between darkmode and light mode
 <img> ![image](https://user-images.githubusercontent.com/9946408/121780840-c5a44000-cbbf-11eb-9632-91a533e06b26.png) </img>
 
-form to check history/dependency
+click on any node to check history/dependency
 <img> ![image](https://user-images.githubusercontent.com/9946408/121780863-db196a00-cbbf-11eb-9ac2-599145766f9c.png) </img>
 
 Click on history to see the data about dag runs
