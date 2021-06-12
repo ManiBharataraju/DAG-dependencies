@@ -1,5 +1,4 @@
 '''
-Yotta Job Replaced: None
 
 This DAG pulls dag statuses such as running, completed, failed and inserts them into the DB
 table dag_status. It does this for the most recent five DAG runs, and the data from the DB is used to render
