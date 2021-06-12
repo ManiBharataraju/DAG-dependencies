@@ -14,7 +14,7 @@ from airflow.models import Variable, DagRun, DagBag, DagTag, TaskInstance, DagMo
 from airflow.utils.db import provide_session
 from airflow.utils.state import State
 
-from airflow.providers.postgres.hooks.postgres import DWPostgresHook
+from airflow.providers.postgres.hooks.postgres import PostgresHook
 from airflow.operators.python import PythonOperator
 
 
@@ -128,7 +128,7 @@ with DAG(
     schedule_interval="0/5 * * * *",
 ) as dag:
 
-    get_dag_status_task = DWPythonOperator(
+    get_dag_status_task = PythonOperator(
         task_id='get_dag_status_task',
         python_callable=get_dag_status,
         provide_context=True
